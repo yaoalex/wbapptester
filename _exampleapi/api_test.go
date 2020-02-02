@@ -6,23 +6,26 @@ import (
 	"testing"
 )
 
-func TestGetProducts(t *testing.T) {
+// THIS IS GENERATED CODE BY WEBAPPTESTER
+// you will need to edit this code to suit your API's needs
+
+func TestGetProducts (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
 	}{
 		{
-			Name:           "GetProducts: valid test case",
+			Name: "GetProducts: valid test case",
 			ExpectedStatus: http.StatusOK,
 		},
 		{
-			Name:           "GetProducts: invalid test case",
+			Name: "GetProducts: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -39,23 +42,23 @@ func TestGetProducts(t *testing.T) {
 		})
 	}
 }
-func TestGetProduct(t *testing.T) {
+func TestGetProduct (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
 	}{
 		{
-			Name:           "GetProduct: valid test case",
+			Name: "GetProduct: valid test case",
 			ExpectedStatus: http.StatusOK,
 		},
 		{
-			Name:           "GetProduct: invalid test case",
+			Name: "GetProduct: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -72,23 +75,23 @@ func TestGetProduct(t *testing.T) {
 		})
 	}
 }
-func TestPurchaseProduct(t *testing.T) {
+func TestPurchaseProduct (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
 	}{
 		{
-			Name:           "PurchaseProduct: valid test case",
+			Name: "PurchaseProduct: valid test case",
 			ExpectedStatus: http.StatusOK,
 		},
 		{
-			Name:           "PurchaseProduct: invalid test case",
+			Name: "PurchaseProduct: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)

@@ -8,6 +8,9 @@ import (
 	"testing"
 )
 
+// THIS IS GENERATED CODE BY WEBAPPTESTER
+// you will need to edit this code to suit your API's needs
+
 {{range .FuncNames -}}
 func Test{{.}} (t *testing.T) {
 	testCases := []struct {
