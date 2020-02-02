@@ -5,15 +5,25 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"html/template"
 	"log"
 	"os"
+	"path/filepath"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-func parseFunctions(filepath string) {
+const outputTemplate = `{{range .FuncNames -}}
+func Test{{.}} (t *testing.T) {
+
+}
+
+{{end -}}
+`
+
+func parseFunctions(filePath string) {
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, filepath, nil, parser.ParseComments)
+	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
 
 	if err != nil {
 		log.Fatal(err)
@@ -45,6 +55,27 @@ func parseFunctions(filepath string) {
 			}
 		}
 	}
+	if len(handlerFuncs) > 0 {
+		extension := filepath.Ext(filePath)
+		basePath := filepath.Base(filePath)
+		testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
+		outFile, err := os.Create(testFileName)
+		if err != nil {
+			fmt.Printf("Error creating test file named: %s\n", testFileName)
+		}
+		var templateValues = struct {
+			FuncNames []string
+		}{
+			FuncNames: handlerFuncs,
+		}
+		tmpl := template.Must(template.New("out").Parse(outputTemplate))
+		if err := tmpl.Execute(outFile, templateValues); err != nil {
+			panic(err)
+		}
+		if err := outFile.Close(); err != nil {
+			panic(err)
+		}
+	}
 	fmt.Println(handlerFuncs)
 }
 
@@ -56,17 +87,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	filepath := dir + "\\" + *file
+	filePath := dir + "\\" + *file
 
-	if _, err := os.Stat(filepath); err == nil {
-		fmt.Printf("Creating tests for the file at: %s\n", filepath)
-		parseFunctions(filepath)
+	if _, err := os.Stat(filePath); err == nil {
+		fmt.Printf("Creating tests for the file at: %s\n", filePath)
+		parseFunctions(filePath)
 
 	} else if os.IsNotExist(err) {
-		fmt.Printf("Could not find the file at: %s\n", filepath)
+		fmt.Printf("Could not find the file at: %s\n", filePath)
 
 	} else {
-		fmt.Printf("Error looking for the file at: %s\n", filepath)
+		fmt.Printf("Error looking for the file at: %s\n", filePath)
 	}
 
 }
