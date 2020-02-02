@@ -13,29 +13,6 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const outputTemplate = `package {{.PackageName}}_test
-
-import "testing"
-
-{{range .FuncNames -}}
-func Test{{.}} (t *testing.T) {
-	testCases := []struct {
-		name string
-	}{
-		{name: "valid test case"},
-		{name: "invalid test case"},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T){
-
-		})
-	}
-}
-
-{{end -}}
-`
-
 func parseFunctions(filePath string) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)

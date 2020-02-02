@@ -6,8 +6,8 @@ func TestGetProducts(t *testing.T) {
 	testCases := []struct {
 		name string
 	}{
-		{name: "valid test case"},
-		{name: "invalid test case"},
+		{name: "GetProducts: valid test case"},
+		{name: "GetProducts: invalid test case"},
 	}
 
 	for _, tc := range testCases {
@@ -21,8 +21,8 @@ func TestGetProduct(t *testing.T) {
 	testCases := []struct {
 		name string
 	}{
-		{name: "valid test case"},
-		{name: "invalid test case"},
+		{name: "GetProduct: valid test case"},
+		{name: "GetProduct: invalid test case"},
 	}
 
 	for _, tc := range testCases {
@@ -36,8 +36,8 @@ func TestPurchaseProduct(t *testing.T) {
 	testCases := []struct {
 		name string
 	}{
-		{name: "valid test case"},
-		{name: "invalid test case"},
+		{name: "PurchaseProduct: valid test case"},
+		{name: "PurchaseProduct: invalid test case"},
 	}
 
 	for _, tc := range testCases {
