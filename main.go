@@ -13,9 +13,24 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const outputTemplate = `{{range .FuncNames -}}
-func Test{{.}} (t *testing.T) {
+const outputTemplate = `package {{.PackageName}}_test
 
+import "testing"
+
+{{range .FuncNames -}}
+func Test{{.}} (t *testing.T) {
+	testCases := []struct {
+		name string
+	}{
+		{name: "valid test case"},
+		{name: "invalid test case"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T){
+
+		})
+	}
 }
 
 {{end -}}
@@ -30,6 +45,7 @@ func parseFunctions(filePath string) {
 	}
 
 	var handlerFuncs []string
+	packageName := fmt.Sprint(f.Name)
 
 	for _, decl := range f.Decls {
 		switch t := decl.(type) {
@@ -56,11 +72,11 @@ func parseFunctions(filePath string) {
 		}
 	}
 	if len(handlerFuncs) > 0 {
-		generateTestFile(filePath, handlerFuncs)
+		generateTestFile(packageName, filePath, handlerFuncs)
 	}
 }
 
-func generateTestFile(filePath string, handlerFuncs []string) {
+func generateTestFile(packageName, filePath string, handlerFuncs []string) {
 	extension := filepath.Ext(filePath)
 	basePath := filepath.Base(filePath)
 	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
@@ -69,9 +85,11 @@ func generateTestFile(filePath string, handlerFuncs []string) {
 		fmt.Printf("Error creating test file named: %s\n", testFileName)
 	}
 	var templateValues = struct {
-		FuncNames []string
+		FuncNames   []string
+		PackageName string
 	}{
-		FuncNames: handlerFuncs,
+		FuncNames:   handlerFuncs,
+		PackageName: packageName,
 	}
 	tmpl := template.Must(template.New("out").Parse(outputTemplate))
 	if err := tmpl.Execute(outFile, templateValues); err != nil {
