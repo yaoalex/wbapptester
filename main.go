@@ -56,27 +56,30 @@ func parseFunctions(filePath string) {
 		}
 	}
 	if len(handlerFuncs) > 0 {
-		extension := filepath.Ext(filePath)
-		basePath := filepath.Base(filePath)
-		testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
-		outFile, err := os.Create(testFileName)
-		if err != nil {
-			fmt.Printf("Error creating test file named: %s\n", testFileName)
-		}
-		var templateValues = struct {
-			FuncNames []string
-		}{
-			FuncNames: handlerFuncs,
-		}
-		tmpl := template.Must(template.New("out").Parse(outputTemplate))
-		if err := tmpl.Execute(outFile, templateValues); err != nil {
-			panic(err)
-		}
-		if err := outFile.Close(); err != nil {
-			panic(err)
-		}
+		generateTestFile(filePath, handlerFuncs)
 	}
-	fmt.Println(handlerFuncs)
+}
+
+func generateTestFile(filePath string, handlerFuncs []string) {
+	extension := filepath.Ext(filePath)
+	basePath := filepath.Base(filePath)
+	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
+	outFile, err := os.Create(testFileName)
+	if err != nil {
+		fmt.Printf("Error creating test file named: %s\n", testFileName)
+	}
+	var templateValues = struct {
+		FuncNames []string
+	}{
+		FuncNames: handlerFuncs,
+	}
+	tmpl := template.Must(template.New("out").Parse(outputTemplate))
+	if err := tmpl.Execute(outFile, templateValues); err != nil {
+		panic(err)
+	}
+	if err := outFile.Close(); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
