@@ -1,21 +1,44 @@
 package main
 
-const outputTemplate = `package {{.PackageName}}_test
+const outputTemplate = `package {{.PackageName}}
 
-import "testing"
+import (
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
 
 {{range .FuncNames -}}
 func Test{{.}} (t *testing.T) {
 	testCases := []struct {
-		name string
+		Name string
+		ExpectedStatus int
 	}{
-		{name: "{{.}}: valid test case"},
-		{name: "{{.}}: invalid test case"},
+		{
+			Name: "{{.}}: valid test case",
+			ExpectedStatus: http.StatusOK,
+		},
+		{
+			Name: "{{.}}: invalid test case",
+			ExpectedStatus: http.StatusBadRequest,
+		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T){
+		t.Run(tc.Name, func(t *testing.T){
+			req, err := http.NewRequest("GET", "/test", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
 
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc({{.}})
+
+			handler.ServeHTTP(rr, req)
+			if status := rr.Code; status != tc.ExpectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tc.ExpectedStatus)
+			}
 		})
 	}
 }

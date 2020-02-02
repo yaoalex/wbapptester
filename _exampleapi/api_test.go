@@ -1,48 +1,107 @@
-package exampleapi_test
+package exampleapi
 
-import "testing"
+import (
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
 
 func TestGetProducts(t *testing.T) {
 	testCases := []struct {
-		name string
+		Name           string
+		ExpectedStatus int
 	}{
-		{name: "GetProducts: valid test case"},
-		{name: "GetProducts: invalid test case"},
+		{
+			Name:           "GetProducts: valid test case",
+			ExpectedStatus: http.StatusOK,
+		},
+		{
+			Name:           "GetProducts: invalid test case",
+			ExpectedStatus: http.StatusBadRequest,
+		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", "/test", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
 
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(GetProducts)
+
+			handler.ServeHTTP(rr, req)
+			if status := rr.Code; status != tc.ExpectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tc.ExpectedStatus)
+			}
 		})
 	}
 }
-
 func TestGetProduct(t *testing.T) {
 	testCases := []struct {
-		name string
+		Name           string
+		ExpectedStatus int
 	}{
-		{name: "GetProduct: valid test case"},
-		{name: "GetProduct: invalid test case"},
+		{
+			Name:           "GetProduct: valid test case",
+			ExpectedStatus: http.StatusOK,
+		},
+		{
+			Name:           "GetProduct: invalid test case",
+			ExpectedStatus: http.StatusBadRequest,
+		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", "/test", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
 
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(GetProduct)
+
+			handler.ServeHTTP(rr, req)
+			if status := rr.Code; status != tc.ExpectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tc.ExpectedStatus)
+			}
 		})
 	}
 }
-
 func TestPurchaseProduct(t *testing.T) {
 	testCases := []struct {
-		name string
+		Name           string
+		ExpectedStatus int
 	}{
-		{name: "PurchaseProduct: valid test case"},
-		{name: "PurchaseProduct: invalid test case"},
+		{
+			Name:           "PurchaseProduct: valid test case",
+			ExpectedStatus: http.StatusOK,
+		},
+		{
+			Name:           "PurchaseProduct: invalid test case",
+			ExpectedStatus: http.StatusBadRequest,
+		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", "/test", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
 
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(PurchaseProduct)
+
+			handler.ServeHTTP(rr, req)
+			if status := rr.Code; status != tc.ExpectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tc.ExpectedStatus)
+			}
 		})
 	}
 }
