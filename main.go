@@ -13,6 +13,47 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+func getMuxVars(t *ast.FuncDecl) []string {
+	paramName := ""
+	var muxVars []string
+	for _, statement := range t.Body.List {
+		switch s := statement.(type) {
+		case *ast.AssignStmt:
+			if paramName == "" {
+				switch s2 := s.Rhs[0].(type) {
+				case *ast.CallExpr:
+					switch s3 := s2.Fun.(type) {
+					case *ast.SelectorExpr:
+						expr := fmt.Sprint(s3)
+						if expr == "&{mux Vars}" {
+							switch s4 := s.Lhs[0].(type) {
+							case *ast.Ident:
+								paramName = s4.Name
+							}
+						}
+					}
+				}
+			} else {
+				switch s5 := s.Rhs[0].(type) {
+				case *ast.IndexExpr:
+					switch s6 := s5.X.(type) {
+					case *ast.Ident:
+						if s6.Name == paramName {
+							switch s7 := s5.Index.(type) {
+							case *ast.BasicLit:
+								cleanedValue := s7.Value[1 : len(s7.Value)-1] //remove quotes around string
+								muxVars = append(muxVars, cleanedValue)
+							}
+
+						}
+					}
+				}
+			}
+		}
+	}
+	return muxVars
+}
+
 func parseFunctions(filePath string) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
@@ -22,6 +63,7 @@ func parseFunctions(filePath string) {
 	}
 
 	var handlerFuncs []string
+	var muxVars []string
 	packageName := fmt.Sprint(f.Name)
 
 	for _, decl := range f.Decls {
@@ -45,15 +87,16 @@ func parseFunctions(filePath string) {
 			}
 			if responseWriterParamExists && requestParamExists {
 				handlerFuncs = append(handlerFuncs, fmt.Sprint(t.Name))
+				muxVars = getMuxVars(t)
 			}
 		}
 	}
 	if len(handlerFuncs) > 0 {
-		generateTestFile(packageName, filePath, handlerFuncs)
+		generateTestFile(packageName, filePath, handlerFuncs, muxVars)
 	}
 }
 
-func generateTestFile(packageName, filePath string, handlerFuncs []string) {
+func generateTestFile(packageName, filePath string, handlerFuncs, muxVars []string) {
 	extension := filepath.Ext(filePath)
 	basePath := filepath.Base(filePath)
 	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
@@ -64,10 +107,13 @@ func generateTestFile(packageName, filePath string, handlerFuncs []string) {
 	var templateValues = struct {
 		FuncNames   []string
 		PackageName string
+		MuxVars     []string
 	}{
 		FuncNames:   handlerFuncs,
 		PackageName: packageName,
+		MuxVars:     muxVars,
 	}
+	fmt.Println(templateValues)
 	tmpl := template.Must(template.New("out").Parse(outputTemplate))
 	if err := tmpl.Execute(outFile, templateValues); err != nil {
 		panic(err)

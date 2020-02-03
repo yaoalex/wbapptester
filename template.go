@@ -7,23 +7,29 @@ import (
 	"net/http/httptest"
 	"testing"
 )
-
+{{ $muxvars := .MuxVars}}
 // THIS IS GENERATED CODE BY WEBAPPTESTER
 // you will need to edit this code to suit your API's needs
 
-{{range .FuncNames -}}
-func Test{{.}} (t *testing.T) {
+{{range $funcname := .FuncNames}} func Test{{$funcname}} (t *testing.T) {
 	testCases := []struct {
 		Name string
 		ExpectedStatus int
+		MuxVars map[string]string
 	}{
 		{
-			Name: "{{.}}: valid test case",
+			Name: "{{$funcname}}: valid test case",
 			ExpectedStatus: http.StatusOK,
+			MuxVars:        map[string]string  {
+				{{range $muxvar := $muxvars}} "{{$muxvar}}" : "valid_value", {{end}}
+			},
 		},
 		{
-			Name: "{{.}}: invalid test case",
+			Name: "{{$funcname}}: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
+			MuxVars:        map[string]string  {
+				{{range $muxvar := $muxvars}} "{{$muxvar}}" : "invalid_value", 	{{end}}
+			},
 		},
 	}
 
@@ -35,7 +41,9 @@ func Test{{.}} (t *testing.T) {
 			}
 
 			rr := httptest.NewRecorder()
-			handler := http.HandlerFunc({{.}})
+			handler := http.HandlerFunc({{$funcname}})
+
+            req = mux.SetURLVars(req, tc.MuxVars)
 
 			handler.ServeHTTP(rr, req)
 			if status := rr.Code; status != tc.ExpectedStatus {
@@ -45,5 +53,5 @@ func Test{{.}} (t *testing.T) {
 		})
 	}
 }
-{{end -}}
+{{end}}
 `

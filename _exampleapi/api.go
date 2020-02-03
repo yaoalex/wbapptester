@@ -36,6 +36,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	showEmpty := params["show_empty"]
 	if showEmpty == "true" {
+		//w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(store)
 	} else {
 		var nonEmptyProducts []Product
