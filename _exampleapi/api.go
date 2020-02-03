@@ -2,6 +2,7 @@ package exampleapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -35,6 +36,10 @@ func main() {
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	showEmpty := params["show_empty"]
+	_, ok := params["test"]
+	if !ok {
+		fmt.Println("test")
+	}
 	if showEmpty == "true" {
 		//w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(store)

@@ -13,6 +13,11 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+type FunctionInfo struct {
+	Name    string
+	MuxVars []string
+}
+
 func getMuxVars(t *ast.FuncDecl) []string {
 	paramName := ""
 	var muxVars []string
@@ -64,6 +69,7 @@ func parseFunctions(filePath string) {
 
 	var handlerFuncs []string
 	var muxVars []string
+	var funcInfos []FunctionInfo
 	packageName := fmt.Sprint(f.Name)
 
 	for _, decl := range f.Decls {
@@ -86,17 +92,22 @@ func parseFunctions(filePath string) {
 				}
 			}
 			if responseWriterParamExists && requestParamExists {
+				funcInfo := FunctionInfo{
+					Name:    fmt.Sprint(t.Name),
+					MuxVars: getMuxVars(t),
+				}
 				handlerFuncs = append(handlerFuncs, fmt.Sprint(t.Name))
 				muxVars = getMuxVars(t)
+				funcInfos = append(funcInfos, funcInfo)
 			}
 		}
 	}
 	if len(handlerFuncs) > 0 {
-		generateTestFile(packageName, filePath, handlerFuncs, muxVars)
+		generateTestFile(packageName, filePath, handlerFuncs, muxVars, funcInfos)
 	}
 }
 
-func generateTestFile(packageName, filePath string, handlerFuncs, muxVars []string) {
+func generateTestFile(packageName, filePath string, handlerFuncs, muxVars []string, funcInfos []FunctionInfo) {
 	extension := filepath.Ext(filePath)
 	basePath := filepath.Base(filePath)
 	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
@@ -105,15 +116,17 @@ func generateTestFile(packageName, filePath string, handlerFuncs, muxVars []stri
 		fmt.Printf("Error creating test file named: %s\n", testFileName)
 	}
 	var templateValues = struct {
+		FuncInfo    []FunctionInfo
 		FuncNames   []string
 		PackageName string
 		MuxVars     []string
 	}{
+		FuncInfo:    funcInfos,
 		FuncNames:   handlerFuncs,
 		PackageName: packageName,
 		MuxVars:     muxVars,
 	}
-	fmt.Println(templateValues)
+	fmt.Println(funcInfos)
 	tmpl := template.Must(template.New("out").Parse(outputTemplate))
 	if err := tmpl.Execute(outFile, templateValues); err != nil {
 		panic(err)

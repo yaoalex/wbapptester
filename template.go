@@ -6,29 +6,33 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gorilla/mux"
 )
-{{ $muxvars := .MuxVars}}
+
 // THIS IS GENERATED CODE BY WEBAPPTESTER
 // you will need to edit this code to suit your API's needs
 
-{{range $funcname := .FuncNames}} func Test{{$funcname}} (t *testing.T) {
+{{range $funcinfo := .FuncInfo}} func Test{{$funcinfo.Name}} (t *testing.T) {
 	testCases := []struct {
 		Name string
 		ExpectedStatus int
 		MuxVars map[string]string
 	}{
 		{
-			Name: "{{$funcname}}: valid test case",
+			Name: "{{$funcinfo.Name}}: valid test case",
 			ExpectedStatus: http.StatusOK,
 			MuxVars:        map[string]string  {
-				{{range $muxvar := $muxvars}} "{{$muxvar}}" : "valid_value", {{end}}
+				{{range $muxvar := $funcinfo.MuxVars}} "{{$muxvar}}" : "valid_value", 
+				{{end}}
 			},
 		},
 		{
-			Name: "{{$funcname}}: invalid test case",
+			Name: "{{$funcinfo.Name}}: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
 			MuxVars:        map[string]string  {
-				{{range $muxvar := $muxvars}} "{{$muxvar}}" : "invalid_value", 	{{end}}
+				{{range $muxvar := $funcinfo.MuxVars}} "{{$muxvar}}" : "invalid_value", 
+				{{end}}
 			},
 		},
 	}
@@ -41,7 +45,7 @@ import (
 			}
 
 			rr := httptest.NewRecorder()
-			handler := http.HandlerFunc({{$funcname}})
+			handler := http.HandlerFunc({{$funcinfo.Name}})
 
             req = mux.SetURLVars(req, tc.MuxVars)
 

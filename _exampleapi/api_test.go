@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// THIS IS GENERATED BOILERPLATE CODE BY WEBAPPTESTER
+// THIS IS GENERATED CODE BY WEBAPPTESTER
 // you will need to edit this code to suit your API's needs
 
 func TestGetProducts(t *testing.T) {
@@ -21,14 +21,16 @@ func TestGetProducts(t *testing.T) {
 			Name:           "GetProducts: valid test case",
 			ExpectedStatus: http.StatusOK,
 			MuxVars: map[string]string{
-				"title": "valid_value",
+				"show_empty": "valid_value",
+				"test":       "valid_value",
 			},
 		},
 		{
 			Name:           "GetProducts: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
 			MuxVars: map[string]string{
-				"title": "invalid_value",
+				"show_empty": "invalid_value",
+				"test":       "invalid_value",
 			},
 		},
 	}
