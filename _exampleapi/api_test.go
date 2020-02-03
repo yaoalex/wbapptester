@@ -97,6 +97,44 @@ func TestGetProduct(t *testing.T) {
 		})
 	}
 }
+func TestGetTest(t *testing.T) {
+	testCases := []struct {
+		Name           string
+		ExpectedStatus int
+		MuxVars        map[string]string
+	}{
+		{
+			Name:           "GetTest: valid test case",
+			ExpectedStatus: http.StatusOK,
+			MuxVars:        map[string]string{},
+		},
+		{
+			Name:           "GetTest: invalid test case",
+			ExpectedStatus: http.StatusBadRequest,
+			MuxVars:        map[string]string{},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.Name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", "/test", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(GetTest)
+
+			req = mux.SetURLVars(req, tc.MuxVars)
+
+			handler.ServeHTTP(rr, req)
+			if status := rr.Code; status != tc.ExpectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tc.ExpectedStatus)
+			}
+		})
+	}
+}
 func TestPurchaseProduct(t *testing.T) {
 	testCases := []struct {
 		Name           string

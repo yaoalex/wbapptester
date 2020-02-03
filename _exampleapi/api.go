@@ -67,6 +67,11 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Not Found")
 }
 
+// GetTest returns nothing
+func GetTest(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode("Test")
+}
+
 // PurchaseProduct decrements the product with the specified title by 1
 func PurchaseProduct(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
