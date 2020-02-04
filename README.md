@@ -108,4 +108,4 @@ func TestGet(t *testing.T) {
 }
 ```
 
-So much time saved :) 
+Hope this tool can save you some time!
