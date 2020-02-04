@@ -1,10 +1,10 @@
 # webapptester
 Command line tool that generates boilerplate unit tests for your http handlers. Get a head start on writing your unit tests with these auto generated (Table Driven) tests. Now this doesn't completely unit test your code but you can easily add more test cases and variables to your test structure. This even parses your file for Mux router variables, and sets them up in the table for you! Each test for the handler is created separately, so it is a true unit test.  
 
-## motivation
+## Motivation
 At one of my previous internships, I built a lot of endpoints in Go. So naturally this meant I wrote a lot of unit tests for these endpoints. What I realized when writing these unit tests was that there is a lot of repetitive actions in building these tests. Tasks like creating a http request for every test case, setting up all the necessary variables to run your test, and just structuring the test cases in general.. seemed very repetitive. So hopefully this tool can save someone some time.
 
-## how-to 
+## How-to 
 This project has no outside dependencies (other than Go)
 
 Just run
@@ -22,7 +22,7 @@ To use the tool simply run
 It will parse the file and look for any http handler functions.  
 If there are testable functions found, it will try creating the test file in yourfile_test.go and if that file already exists it will prompt to store the file in a new location. It will also try running a gofmt on the file so it looks nice and pretty for you.
 
-## example
+## Example
 
 Here is a file containing a simple Get request
 
@@ -108,6 +108,6 @@ func TestGet(t *testing.T) {
 }
 ```
 
-## future plans
+## Future Plans
 - Add the ability to specify your own template (because not everyone writes tests the same way)
 - Add the ability to mock dependencies.  For example if a handler function belongs to a struct, like an environment object with a database dependency, mock out these dependencies and make their behaviour part of the test case.  
