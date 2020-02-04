@@ -1,6 +1,6 @@
 # webapptester
 
-Command line tool that generates boilerplate unit tests for your http handlers. Get a head start on writing your unit tests with these auto generated (Table Driven) tests. Now this doesn't completely unit test your code but you can easily add more test cases and variables to your test structure. This even parses your file for Mux router variables, and sets them up in the table for you! Each test for the handler is created separately, so it is a true unit test.
+Command line tool that generates boilerplate unit tests for your http handlers. Get a head start on writing your unit tests with these auto generated (Table Driven) tests. Now this doesn't completely unit test your code but you can easily add more test cases and variables to your test structure. This even parses your file for Mux router variables, and sets them up in the table for you. Each test for the handler is created separately, so it is a true unit test.
 
 ## Motivation
 
