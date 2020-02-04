@@ -20,7 +20,7 @@ To use the tool simply run
 `webapptester <file you want to test>`
 
 It will parse the file and look for any http handler functions.  
-If there are testable functions found, it will try creating the test file in yourfile_test.go and if that file already exists it will prompt to store the file in a new location.  
+If there are testable functions found, it will try creating the test file in yourfile_test.go and if that file already exists it will prompt to store the file in a new location. It will also try running a gofmt on the file so it looks nice and pretty for you.
 
 ## example
 
