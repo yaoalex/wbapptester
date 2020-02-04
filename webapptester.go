@@ -4,9 +4,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )
+
+func buildTestFileName(file string) string {
+	extension := filepath.Ext(file)
+	testFileName := file[0:len(file)-len(extension)] + "_test.go"
+	return testFileName
+}
 
 func main() {
 	app := kingpin.New("webapptester", "Generate boilerplate code to test your HTTP handlers")
@@ -20,12 +28,33 @@ func main() {
 
 	if _, err := os.Stat(filePath); err == nil {
 		funcInfos, packageName := parseFunctions(filePath)
-		if len(funcInfos) > 0 {
+		if len(*funcInfos) > 0 {
 			fmt.Println("Creating tests for the following http handlers:")
-			for i, v := range funcInfos {
+			for i, v := range *funcInfos {
 				fmt.Printf("%d. %s\n", i+1, v.Name)
 			}
-			generateTestFile(packageName, filePath, funcInfos)
+			testFileName := buildTestFileName(*file)
+			_, err := os.Stat(testFileName)
+			for err == nil {
+				fmt.Printf("File already exists at the location: %s\n", testFileName)
+				fmt.Println("Please enter a new location to store generated test file")
+				fmt.Scanln(&testFileName)
+				if _, err := os.Stat(testFileName); os.IsNotExist(err) {
+					break
+				}
+			}
+			err = generateTestFile(packageName, testFileName, funcInfos)
+			if err != nil {
+				fmt.Println("Error trying to create the test file")
+				log.Fatal(err)
+			}
+			cmd := exec.Command("gofmt", "-w", testFileName)
+			if _, err := cmd.CombinedOutput(); err != nil {
+				fmt.Println("Failed to run gofmt on the test file")
+				log.Fatal(err)
+			}
+			fmt.Printf("Successfully generate test code at: %s\n", testFileName)
+
 		} else {
 			fmt.Println("Could not find any http handler functions in the file")
 		}
@@ -34,6 +63,7 @@ func main() {
 
 	} else {
 		fmt.Printf("Error looking for the file at: %s\n", filePath)
+		log.Fatal(err)
 	}
 
 }

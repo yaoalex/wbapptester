@@ -7,38 +7,29 @@ import (
 	"go/token"
 	"log"
 	"os"
-	"path/filepath"
 	"text/template"
 )
 
-// FunctionInfo contains information about the http handler functions
-type FunctionInfo struct {
-	Name    string
-	MuxVars []string
-}
-
-func generateTestFile(packageName, filePath string, funcInfos []FunctionInfo) {
-	extension := filepath.Ext(filePath)
-	basePath := filepath.Base(filePath)
-	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
+func generateTestFile(packageName, testFileName string, funcInfos *[]FunctionInfo) error {
 	outFile, err := os.Create(testFileName)
 	if err != nil {
 		fmt.Printf("Error creating test file named: %s\n", testFileName)
 	}
 	templateValues := TemplateValues{
-		FuncInfo:    funcInfos,
+		FuncInfo:    *funcInfos,
 		PackageName: packageName,
 	}
 	tmpl := template.Must(template.New("out").Parse(outputTemplate))
 	if err := tmpl.Execute(outFile, templateValues); err != nil {
-		panic(err)
+		return err
 	}
 	if err := outFile.Close(); err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
-func parseFunctions(filePath string) ([]FunctionInfo, string) {
+func parseFunctions(filePath string) (*[]FunctionInfo, string) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
 
@@ -77,5 +68,5 @@ func parseFunctions(filePath string) ([]FunctionInfo, string) {
 			}
 		}
 	}
-	return funcInfos, packageName
+	return &funcInfos, packageName
 }

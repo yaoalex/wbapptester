@@ -6,6 +6,12 @@ type TemplateValues = struct {
 	PackageName string
 }
 
+// FunctionInfo contains information about the http handler functions
+type FunctionInfo struct {
+	Name    string
+	MuxVars []string
+}
+
 const outputTemplate = `package {{.PackageName}}
 
 import (
