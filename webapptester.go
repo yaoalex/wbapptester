@@ -38,10 +38,10 @@ func buildTestFileName(file string) string {
 }
 
 func parseFile(filePath, file string) {
-	funcInfos, packageName := parseFunctions(filePath)
-	if len(*funcInfos) > 0 {
+	templateValues := parseFunctions(filePath)
+	if len(templateValues.FuncInfo) > 0 {
 		fmt.Println("Creating tests for the following http handlers:")
-		for i, v := range *funcInfos {
+		for i, v := range templateValues.FuncInfo {
 			fmt.Printf("%d. %s\n", i+1, v.Name)
 		}
 		testFileName := buildTestFileName(file)
@@ -54,7 +54,7 @@ func parseFile(filePath, file string) {
 				break
 			}
 		}
-		err = generateTestFile(packageName, testFileName, funcInfos)
+		err = generateTestFile(testFileName, templateValues)
 		if err != nil {
 			fmt.Println("Error trying to create the test file")
 			log.Fatal(err)

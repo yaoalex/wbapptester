@@ -4,6 +4,7 @@ package main
 type TemplateValues = struct {
 	FuncInfo    []FunctionInfo
 	PackageName string
+	ContainsMux bool
 }
 
 // FunctionInfo contains information about the http handler functions
@@ -19,8 +20,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	{{if .ContainsMux}}
 	"github.com/gorilla/mux"
+	{{end}}
 )
+
+{{ $containsmux := .ContainsMux }}
 
 // THIS IS GENERATED CODE BY WEBAPPTESTER
 // you will need to edit this code to suit your API's needs
@@ -34,18 +39,20 @@ import (
 		{
 			Name: "{{$funcinfo.Name}}: valid test case",
 			ExpectedStatus: http.StatusOK,
-			MuxVars:        map[string]string  {
+{{if $containsmux}}	MuxVars: map[string]string  {
 				{{range $muxvar := $funcinfo.MuxVars}} "{{$muxvar}}" : "valid_value", 
 				{{end}}
 			},
+			{{end}}
 		},
 		{
 			Name: "{{$funcinfo.Name}}: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
-			MuxVars:        map[string]string  {
+{{if $containsmux}}	MuxVars:        map[string]string  {
 				{{range $muxvar := $funcinfo.MuxVars}} "{{$muxvar}}" : "invalid_value", 
 				{{end}}
 			},
+			{{end}}
 		},
 	}
 
@@ -59,7 +66,9 @@ import (
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc({{$funcinfo.Name}})
 
-            req = mux.SetURLVars(req, tc.MuxVars)
+			{{if $containsmux}}
+			req = mux.SetURLVars(req, tc.MuxVars)
+			{{end}}
 
 			handler.ServeHTTP(rr, req)
 			if status := rr.Code; status != tc.ExpectedStatus {

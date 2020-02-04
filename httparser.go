@@ -10,14 +10,10 @@ import (
 	"text/template"
 )
 
-func generateTestFile(packageName, testFileName string, funcInfos *[]FunctionInfo) error {
+func generateTestFile(testFileName string, templateValues *TemplateValues) error {
 	outFile, err := os.Create(testFileName)
 	if err != nil {
 		fmt.Printf("Error creating test file named: %s\n", testFileName)
-	}
-	templateValues := TemplateValues{
-		FuncInfo:    *funcInfos,
-		PackageName: packageName,
 	}
 	tmpl := template.Must(template.New("out").Parse(outputTemplate))
 	if err := tmpl.Execute(outFile, templateValues); err != nil {
@@ -29,7 +25,7 @@ func generateTestFile(packageName, testFileName string, funcInfos *[]FunctionInf
 	return nil
 }
 
-func parseFunctions(filePath string) (*[]FunctionInfo, string) {
+func parseFunctions(filePath string) *TemplateValues {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
 
@@ -39,6 +35,7 @@ func parseFunctions(filePath string) (*[]FunctionInfo, string) {
 
 	var funcInfos []FunctionInfo
 	packageName := fmt.Sprint(f.Name)
+	containsMux := false
 
 	for _, decl := range f.Decls {
 		switch t := decl.(type) {
@@ -60,13 +57,22 @@ func parseFunctions(filePath string) (*[]FunctionInfo, string) {
 				}
 			}
 			if responseWriterParamExists && requestParamExists {
+				muxVars := getMuxVars(t)
+				if len(muxVars) > 0 {
+					containsMux = true
+				}
 				funcInfo := FunctionInfo{
 					Name:    fmt.Sprint(t.Name),
-					MuxVars: getMuxVars(t),
+					MuxVars: muxVars,
 				}
 				funcInfos = append(funcInfos, funcInfo)
 			}
 		}
 	}
-	return &funcInfos, packageName
+	templateValues := TemplateValues{
+		FuncInfo:    funcInfos,
+		PackageName: packageName,
+		ContainsMux: containsMux,
+	}
+	return &templateValues
 }
