@@ -19,9 +19,16 @@ func main() {
 	filePath := dir + "\\" + *file
 
 	if _, err := os.Stat(filePath); err == nil {
-		fmt.Printf("Creating tests for the file at: %s\n", filePath)
-		parseFunctions(filePath)
-
+		funcInfos, packageName := parseFunctions(filePath)
+		if len(funcInfos) > 0 {
+			fmt.Println("Creating tests for the following http handlers:")
+			for i, v := range funcInfos {
+				fmt.Printf("%d. %s\n", i+1, v.Name)
+			}
+			generateTestFile(packageName, filePath, funcInfos)
+		} else {
+			fmt.Println("Could not find any http handler functions in the file")
+		}
 	} else if os.IsNotExist(err) {
 		fmt.Printf("Could not find the file at: %s\n", filePath)
 

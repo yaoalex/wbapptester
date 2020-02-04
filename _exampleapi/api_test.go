@@ -11,32 +11,34 @@ import (
 // THIS IS GENERATED CODE BY WEBAPPTESTER
 // you will need to edit this code to suit your API's needs
 
-func TestGetProducts(t *testing.T) {
+ func TestGetProducts (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
-		MuxVars        map[string]string
+		MuxVars map[string]string
 	}{
 		{
-			Name:           "GetProducts: valid test case",
+			Name: "GetProducts: valid test case",
 			ExpectedStatus: http.StatusOK,
-			MuxVars: map[string]string{
-				"show_empty": "valid_value",
-				"test":       "valid_value",
+			MuxVars:        map[string]string  {
+				 "show_empty" : "valid_value", 
+				 "test" : "valid_value", 
+				
 			},
 		},
 		{
-			Name:           "GetProducts: invalid test case",
+			Name: "GetProducts: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
-			MuxVars: map[string]string{
-				"show_empty": "invalid_value",
-				"test":       "invalid_value",
+			MuxVars:        map[string]string  {
+				 "show_empty" : "invalid_value", 
+				 "test" : "invalid_value", 
+				
 			},
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -45,7 +47,7 @@ func TestGetProducts(t *testing.T) {
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc(GetProducts)
 
-			req = mux.SetURLVars(req, tc.MuxVars)
+            req = mux.SetURLVars(req, tc.MuxVars)
 
 			handler.ServeHTTP(rr, req)
 			if status := rr.Code; status != tc.ExpectedStatus {
@@ -55,30 +57,32 @@ func TestGetProducts(t *testing.T) {
 		})
 	}
 }
-func TestGetProduct(t *testing.T) {
+ func TestGetProduct (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
-		MuxVars        map[string]string
+		MuxVars map[string]string
 	}{
 		{
-			Name:           "GetProduct: valid test case",
+			Name: "GetProduct: valid test case",
 			ExpectedStatus: http.StatusOK,
-			MuxVars: map[string]string{
-				"title": "valid_value",
+			MuxVars:        map[string]string  {
+				 "title" : "valid_value", 
+				
 			},
 		},
 		{
-			Name:           "GetProduct: invalid test case",
+			Name: "GetProduct: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
-			MuxVars: map[string]string{
-				"title": "invalid_value",
+			MuxVars:        map[string]string  {
+				 "title" : "invalid_value", 
+				
 			},
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -87,7 +91,7 @@ func TestGetProduct(t *testing.T) {
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc(GetProduct)
 
-			req = mux.SetURLVars(req, tc.MuxVars)
+            req = mux.SetURLVars(req, tc.MuxVars)
 
 			handler.ServeHTTP(rr, req)
 			if status := rr.Code; status != tc.ExpectedStatus {
@@ -97,26 +101,30 @@ func TestGetProduct(t *testing.T) {
 		})
 	}
 }
-func TestGetTest(t *testing.T) {
+ func TestGetTest (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
-		MuxVars        map[string]string
+		MuxVars map[string]string
 	}{
 		{
-			Name:           "GetTest: valid test case",
+			Name: "GetTest: valid test case",
 			ExpectedStatus: http.StatusOK,
-			MuxVars:        map[string]string{},
+			MuxVars:        map[string]string  {
+				
+			},
 		},
 		{
-			Name:           "GetTest: invalid test case",
+			Name: "GetTest: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
-			MuxVars:        map[string]string{},
+			MuxVars:        map[string]string  {
+				
+			},
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -125,7 +133,7 @@ func TestGetTest(t *testing.T) {
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc(GetTest)
 
-			req = mux.SetURLVars(req, tc.MuxVars)
+            req = mux.SetURLVars(req, tc.MuxVars)
 
 			handler.ServeHTTP(rr, req)
 			if status := rr.Code; status != tc.ExpectedStatus {
@@ -135,30 +143,32 @@ func TestGetTest(t *testing.T) {
 		})
 	}
 }
-func TestPurchaseProduct(t *testing.T) {
+ func TestPurchaseProduct (t *testing.T) {
 	testCases := []struct {
-		Name           string
+		Name string
 		ExpectedStatus int
-		MuxVars        map[string]string
+		MuxVars map[string]string
 	}{
 		{
-			Name:           "PurchaseProduct: valid test case",
+			Name: "PurchaseProduct: valid test case",
 			ExpectedStatus: http.StatusOK,
-			MuxVars: map[string]string{
-				"title": "valid_value",
+			MuxVars:        map[string]string  {
+				 "title" : "valid_value", 
+				
 			},
 		},
 		{
-			Name:           "PurchaseProduct: invalid test case",
+			Name: "PurchaseProduct: invalid test case",
 			ExpectedStatus: http.StatusBadRequest,
-			MuxVars: map[string]string{
-				"title": "invalid_value",
+			MuxVars:        map[string]string  {
+				 "title" : "invalid_value", 
+				
 			},
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
+		t.Run(tc.Name, func(t *testing.T){
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -167,7 +177,7 @@ func TestPurchaseProduct(t *testing.T) {
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc(PurchaseProduct)
 
-			req = mux.SetURLVars(req, tc.MuxVars)
+            req = mux.SetURLVars(req, tc.MuxVars)
 
 			handler.ServeHTTP(rr, req)
 			if status := rr.Code; status != tc.ExpectedStatus {
@@ -177,3 +187,4 @@ func TestPurchaseProduct(t *testing.T) {
 		})
 	}
 }
+

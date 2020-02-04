@@ -11,12 +11,34 @@ import (
 	"text/template"
 )
 
+// FunctionInfo contains information about the http handler functions
 type FunctionInfo struct {
 	Name    string
 	MuxVars []string
 }
 
-func parseFunctions(filePath string) {
+func generateTestFile(packageName, filePath string, funcInfos []FunctionInfo) {
+	extension := filepath.Ext(filePath)
+	basePath := filepath.Base(filePath)
+	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
+	outFile, err := os.Create(testFileName)
+	if err != nil {
+		fmt.Printf("Error creating test file named: %s\n", testFileName)
+	}
+	templateValues := TemplateValues{
+		FuncInfo:    funcInfos,
+		PackageName: packageName,
+	}
+	tmpl := template.Must(template.New("out").Parse(outputTemplate))
+	if err := tmpl.Execute(outFile, templateValues); err != nil {
+		panic(err)
+	}
+	if err := outFile.Close(); err != nil {
+		panic(err)
+	}
+}
+
+func parseFunctions(filePath string) ([]FunctionInfo, string) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
 
@@ -24,8 +46,6 @@ func parseFunctions(filePath string) {
 		log.Fatal(err)
 	}
 
-	var handlerFuncs []string
-	var muxVars []string
 	var funcInfos []FunctionInfo
 	packageName := fmt.Sprint(f.Name)
 
@@ -53,41 +73,9 @@ func parseFunctions(filePath string) {
 					Name:    fmt.Sprint(t.Name),
 					MuxVars: getMuxVars(t),
 				}
-				handlerFuncs = append(handlerFuncs, fmt.Sprint(t.Name))
-				muxVars = getMuxVars(t)
 				funcInfos = append(funcInfos, funcInfo)
 			}
 		}
 	}
-	if len(handlerFuncs) > 0 {
-		generateTestFile(packageName, filePath, handlerFuncs, muxVars, funcInfos)
-	}
-}
-
-func generateTestFile(packageName, filePath string, handlerFuncs, muxVars []string, funcInfos []FunctionInfo) {
-	extension := filepath.Ext(filePath)
-	basePath := filepath.Base(filePath)
-	testFileName := filepath.Base(filePath)[0:len(basePath)-len(extension)] + "_test.go"
-	outFile, err := os.Create(testFileName)
-	if err != nil {
-		fmt.Printf("Error creating test file named: %s\n", testFileName)
-	}
-	var templateValues = struct {
-		FuncInfo    []FunctionInfo
-		FuncNames   []string
-		PackageName string
-		MuxVars     []string
-	}{
-		FuncInfo:    funcInfos,
-		FuncNames:   handlerFuncs,
-		PackageName: packageName,
-		MuxVars:     muxVars,
-	}
-	tmpl := template.Must(template.New("out").Parse(outputTemplate))
-	if err := tmpl.Execute(outFile, templateValues); err != nil {
-		panic(err)
-	}
-	if err := outFile.Close(); err != nil {
-		panic(err)
-	}
+	return funcInfos, packageName
 }

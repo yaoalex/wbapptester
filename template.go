@@ -1,5 +1,11 @@
 package main
 
+// TemplateValues contains information to be passed into the test template
+type TemplateValues = struct {
+	FuncInfo    []FunctionInfo
+	PackageName string
+}
+
 const outputTemplate = `package {{.PackageName}}
 
 import (
