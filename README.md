@@ -107,3 +107,7 @@ func TestGet(t *testing.T) {
 	}
 }
 ```
+
+## future plans
+- Add the ability to specify your own template (because not everyone writes tests the same way
+- Add the ability to mock dependencies.  For example if a handler function belongs to a struct, like an environment object with a database dependency, mock out these dependencies and make their behaviour part of the test case.  
