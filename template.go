@@ -28,7 +28,7 @@ import (
 {{ $containsmux := .ContainsMux }}
 
 // THIS IS GENERATED CODE BY WEBAPPTESTER
-// you will need to edit this code to suit your API's needs
+// you will need to edit this code to suit your needs
 
 {{range $funcinfo := .FuncInfo}} func Test{{$funcinfo.Name}} (t *testing.T) {
 	testCases := []struct {

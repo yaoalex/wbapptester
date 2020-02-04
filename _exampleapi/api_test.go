@@ -9,7 +9,7 @@ import (
 )
 
 // THIS IS GENERATED CODE BY WEBAPPTESTER
-// you will need to edit this code to suit your API's needs
+// you will need to edit this code to suit your needs
 
 func TestGetProducts(t *testing.T) {
 	testCases := []struct {
@@ -22,7 +22,6 @@ func TestGetProducts(t *testing.T) {
 			ExpectedStatus: http.StatusOK,
 			MuxVars: map[string]string{
 				"show_empty": "valid_value",
-				"test":       "valid_value",
 			},
 		},
 		{
@@ -30,7 +29,6 @@ func TestGetProducts(t *testing.T) {
 			ExpectedStatus: http.StatusBadRequest,
 			MuxVars: map[string]string{
 				"show_empty": "invalid_value",
-				"test":       "invalid_value",
 			},
 		},
 	}
