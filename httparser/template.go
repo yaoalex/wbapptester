@@ -1,4 +1,4 @@
-package main
+package httparser
 
 // TemplateValues contains information to be passed into the test template
 type TemplateValues = struct {

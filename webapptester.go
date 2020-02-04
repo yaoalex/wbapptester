@@ -7,12 +7,14 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/yaoalex/webapptester/httparser"
+
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func main() {
 	app := kingpin.New("webapptester", "Generate boilerplate code to test your HTTP handlers")
-	file := app.Arg("file", "Go file you would like to create tests for.").Required().String()
+	file := app.Arg("file", "Go file you would like to create tests for. The test file will by default be generated in <file>_test.go").Required().String()
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	dir, err := os.Getwd()
 	if err != nil {
@@ -38,7 +40,7 @@ func buildTestFileName(file string) string {
 }
 
 func parseFile(filePath, file string) {
-	templateValues := parseFunctions(filePath)
+	templateValues := httparser.ParseFunctions(filePath)
 	if len(templateValues.FuncInfo) > 0 {
 		fmt.Println("Creating tests for the following http handlers:")
 		for i, v := range templateValues.FuncInfo {
@@ -54,7 +56,7 @@ func parseFile(filePath, file string) {
 				break
 			}
 		}
-		err = generateTestFile(testFileName, templateValues)
+		err = httparser.GenerateTestFile(testFileName, templateValues)
 		if err != nil {
 			fmt.Println("Error trying to create the test file")
 			log.Fatal(err)

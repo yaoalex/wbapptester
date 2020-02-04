@@ -1,4 +1,4 @@
-package main
+package httparser
 
 import (
 	"fmt"
@@ -10,7 +10,8 @@ import (
 	"text/template"
 )
 
-func generateTestFile(testFileName string, templateValues *TemplateValues) error {
+// GenerateTestFile creates a file with the template values inserted into the template
+func GenerateTestFile(testFileName string, templateValues *TemplateValues) error {
 	outFile, err := os.Create(testFileName)
 	if err != nil {
 		fmt.Printf("Error creating test file named: %s\n", testFileName)
@@ -25,7 +26,8 @@ func generateTestFile(testFileName string, templateValues *TemplateValues) error
 	return nil
 }
 
-func parseFunctions(filePath string) *TemplateValues {
+// ParseFunctions parses a file and returns information about its HTTP handlers
+func ParseFunctions(filePath string) *TemplateValues {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
 
