@@ -12,6 +12,7 @@ import (
 // you will need to edit this code to suit your needs
 
 func TestGetProducts(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		Name           string
 		ExpectedStatus int
@@ -34,7 +35,9 @@ func TestGetProducts(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -54,6 +57,7 @@ func TestGetProducts(t *testing.T) {
 	}
 }
 func TestGetProduct(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		Name           string
 		ExpectedStatus int
@@ -76,7 +80,9 @@ func TestGetProduct(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -96,6 +102,7 @@ func TestGetProduct(t *testing.T) {
 	}
 }
 func TestGetTest(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		Name           string
 		ExpectedStatus int
@@ -114,7 +121,9 @@ func TestGetTest(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -134,6 +143,7 @@ func TestGetTest(t *testing.T) {
 	}
 }
 func TestPurchaseProduct(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		Name           string
 		ExpectedStatus int
@@ -156,7 +166,9 @@ func TestPurchaseProduct(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)

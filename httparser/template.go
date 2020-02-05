@@ -31,6 +31,7 @@ import (
 // you will need to edit this code to suit your needs
 
 {{range $funcinfo := .FuncInfo}} func Test{{$funcinfo.Name}} (t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		Name string
 		ExpectedStatus int
@@ -57,7 +58,9 @@ import (
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.Name, func(t *testing.T){
+			t.Parallel()
 			req, err := http.NewRequest("GET", "/test", nil)
 			if err != nil {
 				t.Fatal(err)
