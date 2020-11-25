@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// THIS IS GENERATED CODE BY WEBAPPTESTER
+// THIS IS GENERATED CODE BY WBAPPTESTER
 // you will need to edit this code to suit your needs
 
 func TestGetProducts(t *testing.T) {

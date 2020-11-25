@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	app := kingpin.New("webapptester", "Generate boilerplate code to test your HTTP handlers")
+	app := kingpin.New("wbapptester", "Generate boilerplate code to test your HTTP handlers")
 	file := app.Arg("file", "Go file you would like to create tests for. The test file will by default be generated in <file>_test.go").Required().String()
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	dir, err := os.Getwd()
