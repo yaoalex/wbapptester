@@ -12,7 +12,7 @@ The only package outside of the Go standard library that is used is [kingpin](ht
 
 Just run
 
-`go get github.com/yaoalex/webapptester`
+`go get github.com/yaoalex/wbapptester`
 
 `go get gopkg.in/alecthomas/kingpin.v2`
 

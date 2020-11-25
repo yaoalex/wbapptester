@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/yaoalex/webapptester/httparser"
+	"github.com/yaoalex/wbapptester/httparser"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )

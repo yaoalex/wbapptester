@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/yaoalex/webapptester/httparser"
+	"github.com/yaoalex/wbapptester/httparser"
 )
 
 func equal(a, b []httparser.FunctionInfo) bool {
